@@ -176,13 +176,13 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["27:a5:37:7e:57:68:96:3f:fc:d2:f8:67:df:4d:63:8a"]
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
             yum install -y tar gzip
             amazon-linux-extras install ansible2 -y
+      - attach_workspace:
+          at: ~/
       - run:
           name: Debug to view updated inventory file
           command: cat .circleci/ansible/inventory.txt
