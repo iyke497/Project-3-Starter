@@ -30,7 +30,7 @@ Resources:
         - Ref: InstanceSecurityGroup
       KeyName: iyke-key # If you use another key pair name, you should change this value to match.
       # Ubuntu 18 or higher works fine
-      ImageId: ami-052efd3df9dad4825 #ubuntu 22.04 
+      ImageId: ami-08d4ac5b634553e16 #ubuntu 20.04 
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
