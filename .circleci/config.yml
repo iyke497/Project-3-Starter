@@ -419,7 +419,7 @@ jobs:
             export OldWorkflowID=$(cat ~/OldWorkflowID.txt)
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-            if [[ "${STACKS[@]}" != "${OldWorkflowID}" ]]
+            if [[ "${OldWorkflowID}" =~ "${STACKS[@]}" ]]
             then
               aws s3 rm "s3://${OldWorkflowID}" --recursive
               aws s3 rb "s3://${OldWorkflowID}"
