@@ -147,7 +147,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}-backend" \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Ensure front-end infrastructure exist
@@ -155,14 +155,14 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=udapeople \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}-frontend" \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}-backend" \
               --output text >> ./.circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -247,7 +247,7 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}-backend" \
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
@@ -322,7 +322,7 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicDnsName' \
-            --filters Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+            --filters Name=tag:aws:cloudformation:stack-name,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}-backend \
             --output text)
             echo ${BACKEND_IP}
       - run:
@@ -330,7 +330,7 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicDnsName' \
-            --filters Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+            --filters Name=tag:aws:cloudformation:stack-name,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}-backend \
             --output text | xargs)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
@@ -405,8 +405,8 @@ jobs:
       - run:
           name: Get old stack workflow id
           command: |
-            # your code here
             export OldWorkflowID=$(cat ~/OldWorkflowID.txt)
+            #which is udapeople-workflowid
             echo OldWorkflowID: "${OldWorkflowID}"
             echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
             #Fetch the stack names
@@ -416,9 +416,10 @@ jobs:
             #Remove old stack files
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              aws s3 rm "s3://${OldWorkflowID}" --recursive
+              aws s3 rb "s3://${OldWorkflowID}"
+              #aws cloudformation delete-stack --stack-name "${OldWorkflowID}-backend"
+              #aws cloudformation delete-stack --stack-name "${OldWorkflowID}-frontend"
             fi
 
 workflows:
