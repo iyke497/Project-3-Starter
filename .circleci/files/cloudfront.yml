@@ -20,10 +20,11 @@ Resources:
     Properties:
       DistributionConfig:
         Origins:
-          - DomainName: !Sub "${WorkflowID}.s3.amazonaws.com"
+          - DomainName: !Sub "${WorkflowID}.s3.us-east-1.amazonaws.com"
             Id: webpage
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
+            CustomOriginConfig:
+              OriginProtocolPolicy: match-viewer
+              OriginKeepaliveTimeout: 15
         Enabled: True
         DefaultRootObject: index.html
         DefaultCacheBehavior:
