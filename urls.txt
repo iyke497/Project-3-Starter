@@ -1,5 +1,5 @@
 URL01 ==> https://github.com/iyke497/Project-3-Starter
-URL02 ==> http://udapeople-636ad60.s3-website-us-east-1.amazonaws.com
-URL03 ==> https://d9n8g1wj3ois7.cloudfront.net
-URL04 ==> http://ec2-44-202-147-193.compute-1.amazonaws.com:3030/api/satus
+URL02 ==> http://udapeople-48ca7f9.s3-website-us-east-1.amazonaws.com
+URL03 ==> https://d9n8g1wj3ois7.cloudfront.net 
+URL04 ==> http://ec2-3-93-240-177.compute-1.amazonaws.com:3030/api/satus
 URL05 ==> http://ec2-52-207-220-120.compute-1.amazonaws.com:9090/targets
